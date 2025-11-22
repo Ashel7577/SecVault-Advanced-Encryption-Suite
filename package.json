@@ -1,0 +1,13 @@
+{
+  "name": "encryption-suite",
+  "version": "1.0.0",
+  "description": "Advanced Encryption/Decryption Suite",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server -S -C server.crt -K server.key",
+    "dev": "http-server"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1"
+  }
+}
