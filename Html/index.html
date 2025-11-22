@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecVault - Advanced Encryption Suite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/base64-fix.js"></script>
+</head>
+<body class="dark">
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>🔒 SecVault</h1>
+                <p>Enterprise-Grade Encryption & Decryption Suite</p>
+                <div class="guest-access">Guest Mode: <span id="guest-status">Active</span></div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="text">Text Encryption</button>
+                <button class="tab-btn" data-tab="file">File Encryption</button>
+                <button class="tab-btn" data-tab="visual">Algorithm Visualization</button>
+                <button class="tab-btn" data-tab="logs">Security Logs</button>
+            </div>
+            
+            <div id="text-tab" class="tab-content active">
+                <div class="panel-grid">
+                    <div class="panel">
+                        <h3>Input</h3>
+                        <textarea id="input-text" placeholder="Enter text to encrypt..."></textarea>
+                        <div class="controls">
+                            <input type="password" id="text-password" placeholder="Enter encryption password">
+                            <select id="text-algorithm">
+                                <option value="AES-GCM">AES-GCM (Recommended)</option>
+                                <option value="AES-CBC">AES-CBC</option>
+                                <option value="PBKDF2-AES">PBKDF2 + AES</option>
+                            </select>
+                            <button id="encrypt-text-btn" class="btn-primary">Encrypt</button>
+                            <button id="decrypt-text-btn" class="btn-secondary">Decrypt</button>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <h3>Output (Hex)</h3>
+                        <textarea id="output-text" placeholder="Encrypted/Decrypted result..." readonly></textarea>
+                        <div class="output-controls">
+                            <button id="copy-output" class="btn-secondary">Copy</button>
+                            <button id="download-output" class="btn-secondary">Download</button>
+                        </div>
+                        
+                        <div class="base64-output-section">
+                            <h4>Base64 Format:</h4>
+                            <textarea id="base64-output" placeholder="Base64 encrypted result will appear here..." readonly style="display:block; width:100%; min-height:80px; background:#1e1e1e; color:#00ff00; border:1px solid #444; border-radius:4px; padding:10px; font-family:Courier New, monospace; font-size:12px; resize:vertical;"></textarea>
+                            <button id="copy-base64" class="btn-secondary small">Copy Base64</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="visualization-area">
+                    <h3>Encryption Process Visualization</h3>
+                    <div id="text-visualization" class="visualization-container"></div>
+                </div>
+            </div>
+            
+            <div id="file-tab" class="tab-content">
+                <div class="file-encryption-panel">
+                    <div class="file-drop-area" id="drop-area">
+                        <div class="upload-icon">📁</div>
+                        <p>Drag & drop files here or click to select</p>
+                        <input type="file" id="file-input" hidden>
+                        <button id="file-select-btn" class="btn-primary">Select File</button>
+                    </div>
+                    <div class="file-info-panel">
+                        <div class="file-details">
+                            <p>Selected file: <span id="file-name">None</span></p>
+                            <p>Size: <span id="file-size">-</span></p>
+                            <p>Type: <span id="file-type">-</span></p>
+                        </div>
+                        <div class="file-controls">
+                            <input type="password" id="file-password" placeholder="Enter encryption password">
+                            <select id="file-algorithm">
+                                <option value="AES-GCM">AES-GCM (Recommended)</option>
+                                <option value="AES-CBC">AES-CBC</option>
+                            </select>
+                            <div class="action-buttons">
+                                <button id="encrypt-file-btn" class="btn-primary">Encrypt File</button>
+                                <button id="decrypt-file-btn" class="btn-secondary">Decrypt File</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="file-progress">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <p id="progress-text">Ready</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="visual-tab" class="tab-content">
+                <div class="visualization-content">
+                    <h2>Cryptography Algorithm Visualization</h2>
+                    <div class="algorithm-selector">
+                        <button class="algo-btn active" data-algo="aes">AES Encryption</button>
+                        <button class="algo-btn" data-algo="rsa">RSA Encryption</button>
+                        <button class="algo-btn" data-algo="hash">Hash Functions</button>
+                    </div>
+                    <div id="algo-visualization" class="algo-visual-area">
+                        <div id="aes-visualization">
+                            <h3>AES (Advanced Encryption Standard)</h3>
+                            <div class="aes-steps">
+                                <div class="step">
+                                    <div class="step-title">1. Key Expansion</div>
+                                    <div class="step-content">Deriving round keys from the cipher key</div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-title">2. Initial Round</div>
+                                    <div class="step-content">AddRoundKey operation</div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-title">3. Main Rounds (9)</div>
+                                    <div class="step-content">SubBytes → ShiftRows → MixColumns → AddRoundKey</div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-title">4. Final Round</div>
+                                    <div class="step-content">SubBytes → ShiftRows → AddRoundKey</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="logs-tab" class="tab-content">
+                <div class="logs-panel">
+                    <div class="log-controls">
+                        <h2>Security Activity Logs</h2>
+                        <div class="log-actions">
+                            <button id="clear-logs" class="btn-danger">Clear Logs</button>
+                            <button id="export-logs" class="btn-secondary">Export Logs</button>
+                            <select id="log-filter">
+                                <option value="all">All Events</option>
+                                <option value="encryption">Encryption</option>
+                                <option value="decryption">Decryption</option>
+                                <option value="error">Errors</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="log-container" class="log-entries"></div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>SecVault Encryption Suite v1.0 | Enterprise-Grade Security | For Educational Purposes</p>
+        </footer>
+    </div>
+    
+    <!-- Load scripts in correct order -->
+    <script src="js/crypto-core.js"></script>
+    <script src="js/logging.js"></script>
+    <script src="js/text-encryption.js"></script>
+    <script src="js/file-encryption.js"></script>
+    <script src="js/visualization.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- Base64 Output Fix -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        console.log("Setting up Base64 output handler");
+        
+        // Store the original Base64 result globally
+        window._base64Result = null;
+        
+        // Function to convert hex to base64
+        function hexToBase64(hexString) {
+            try {
+                const bytes = [];
+                for (let i = 0; i < hexString.length; i += 2) {
+                    bytes.push(parseInt(hexString.substr(i, 2), 16));
+                }
+                const byteArray = new Uint8Array(bytes);
+                let binary = '';
+                for (let i = 0; i < byteArray.length; i++) {
+                    binary += String.fromCharCode(byteArray[i]);
+                }
+                return btoa(binary);
+            } catch (e) {
+                console.error("Hex to Base64 conversion error:", e);
+                return null;
+            }
+        }
+        
+        // Get elements
+        const hexOutput = document.getElementById("output-text");
+        const base64Output = document.getElementById("base64-output");
+        
+        // Watch for changes to hex output using input event
+        if (hexOutput && base64Output) {
+            // Store original value property
+            const originalValueDescriptor = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value');
+            
+            // Override the value property for hex output only
+            Object.defineProperty(hexOutput, 'value', {
+                get: function() {
+                    return originalValueDescriptor.get.call(this);
+                },
+                set: function(newValue) {
+                    // Set the hex value normally
+                    originalValueDescriptor.set.call(this, newValue);
+                    
+                    // If we have a hex value, convert to base64
+                    if (newValue && newValue.length > 0 && /^[0-9A-Fa-f]+$/.test(newValue)) {
+                        console.log("Hex value detected:", newValue.substring(0, 50));
+                        
+                        // Convert to base64
+                        const base64Value = hexToBase64(newValue);
+                        if (base64Value) {
+                            base64Output.value = base64Value;
+                            console.log("Base64 set from hex:", base64Value.substring(0, 50));
+                        }
+                    }
+                },
+                configurable: true
+            });
+        }
+        
+        // Also intercept SecVaultCrypto methods as backup
+        setTimeout(function() {
+            if (typeof SecVaultCrypto !== 'undefined') {
+                console.log("SecVaultCrypto found");
+                
+                const originalEncryptData = SecVaultCrypto.encryptData;
+                const originalBase64ToHex = SecVaultCrypto.base64ToHex;
+                
+                // Intercept encryptData
+                SecVaultCrypto.encryptData = async function(plaintext, password) {
+                    const base64Result = await originalEncryptData.call(this, plaintext, password);
+                    
+                    window._base64Result = base64Result;
+                    
+                    if (base64Output) {
+                        base64Output.value = base64Result;
+                        console.log("Base64 set from encryptData:", base64Result.substring(0, 50));
+                    }
+                    
+                    return base64Result;
+                };
+                
+                // Intercept base64ToHex
+                if (originalBase64ToHex) {
+                    SecVaultCrypto.base64ToHex = function(base64String) {
+                        console.log("base64ToHex intercepted");
+                        
+                        window._base64Result = base64String;
+                        
+                        if (base64Output) {
+                            base64Output.value = base64String;
+                            console.log("Base64 set from base64ToHex:", base64String.substring(0, 50));
+                        }
+                        
+                        return originalBase64ToHex.call(this, base64String);
+                    };
+                }
+                
+                console.log("All handlers installed");
+            }
+        }, 150);
+    });
+    </script>
+</body>
+</html>
